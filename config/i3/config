@@ -1,23 +1,8 @@
 set $mod Mod4
 
-# Font for window titles. Will also be used by the bar unless a different font
-# is used in the bar {} block below.
-font pango:Hack Nerd Font 9 
-
-# This font is widely installed, provides lots of unicode glyphs, right-to-left
-# text rendering and scalability on retina/hidpi displays (thanks to pango).
-#font pango:DejaVu Sans Mono 8
-
 # Start XDG autostart .desktop files using dex. See also
 # https://wiki.archlinux.org/index.php/XDG_Autostart
 exec --no-startup-id dex --autostart --environment i3
-
-# The combination of xss-lock, nm-applet and pactl is a popular choice, so
-# they are included here as an example. Modify as you see fit.
-
-# xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
-# screen before suspend. Use loginctl lock-session to lock your screen.
-#exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
@@ -38,19 +23,16 @@ floating_modifier $mod
 tiling_drag modifier titlebar
 
 # start a terminal
-bindsym $mod+Return exec ~/Git/st-0.9.3/st -t "Simple Terminal"
+#bindsym $mod+Return exec i3-sensible-terminal
+bindsym $mod+Return exec ~/Git/st/st -t "Simple Terminal"
 
 # kill focused window
-bindsym $mod+q kill
+bindsym $mod+Shift+q kill
 
 # start dmenu (a program launcher)
 #bindsym $mod+d exec --no-startup-id dmenu_run
 # A more modern dmenu replacement is rofi:
-#bindcode $mod+40 exec "rofi -modi drun,run -show drun"
 bindcode $mod+40 exec "rofi -show drun"
-# There also is i3-dmenu-desktop which only displays applications shipping a
-# .desktop file. It is a wrapper around dmenu, so you need that installed.
-# bindcode $mod+40 exec --no-startup-id i3-dmenu-desktop
 
 # change focus
 #bindsym $mod+j focus left
@@ -83,13 +65,9 @@ bindsym $mod+h split h
 bindsym $mod+v split v
 
 # enter fullscreen mode for the focused container
-#bindsym $mod+f fullscreen toggle
 bindsym $mod+F11 fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
-#bindsym $mod+s layout stacking
-
-#bindsym $mod+e layout toggle split
 bindsym $mod+Shift+w layout toggle all
 workspace_layout tabbed
 
@@ -107,14 +85,16 @@ bindsym $mod+a focus parent
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
-set $ws1 "1:term"
-set $ws2 "2:web"
-set $ws3 "3:docs"
-set $ws4 "4:media"
-set $ws5 "5:code"
-set $ws6 "6:music"
-set $ws7 "7:gaming"
-set $ws8 "8:misc"
+set $ws1 "01 "
+set $ws2 "02 "
+set $ws3 "03 "
+set $ws4 "04 "
+set $ws5 "05 "
+set $ws6 "06 "
+set $ws7 "07 "
+set $ws8 "08 "
+set $ws9 "09 "
+set $ws10 "10 "
 
 # switch to workspace
 bindsym $mod+1 workspace $ws1
@@ -125,62 +105,47 @@ bindsym $mod+5 workspace $ws5
 bindsym $mod+6 workspace $ws6
 bindsym $mod+7 workspace $ws7
 bindsym $mod+8 workspace $ws8
+bindsym $mod+9 workspace $ws9
+bindsym $mod+0 workspace $ws10
 
 # move focused container to workspace
-bindsym $mod+Shift+1 move container to workspace $ws1
-bindsym $mod+Shift+2 move container to workspace $ws2
-bindsym $mod+Shift+3 move container to workspace $ws3
-bindsym $mod+Shift+4 move container to workspace $ws4
-bindsym $mod+Shift+5 move container to workspace $ws5
-bindsym $mod+Shift+6 move container to workspace $ws6
-bindsym $mod+Shift+7 move container to workspace $ws7
-bindsym $mod+Shift+8 move container to workspace $ws8
+bindsym $mod+Shift+1 move container to workspace number $ws1
+bindsym $mod+Shift+2 move container to workspace number $ws2
+bindsym $mod+Shift+3 move container to workspace number $ws3
+bindsym $mod+Shift+4 move container to workspace number $ws4
+bindsym $mod+Shift+5 move container to workspace number $ws5
+bindsym $mod+Shift+6 move container to workspace number $ws6
+bindsym $mod+Shift+7 move container to workspace number $ws7
+bindsym $mod+Shift+8 move container to workspace number $ws8
+bindsym $mod+Shift+9 move container to workspace number $ws9
+bindsym $mod+Shift+0 move container to workspace number $ws10
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
+
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
-# exit i3 (logs you out of your X session)
-#bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
-bindsym $mod+Shift+e exec $HOME/.config/i3/powermenu.sh
+
+# exit i3
+bindsym $mod+Shift+e exec ~/.config/i3/powermenu.sh
 
 # resize window (you can also use the mouse for that)
-# Resize
 bindsym $mod+Control+Right resize shrink width 10 px or 10 ppt
 bindsym $mod+Control+Down resize shrink height 10 px or 10 ppt
 bindsym $mod+Control+Up resize grow height 10 px or 10 ppt
 bindsym $mod+Control+Left resize grow width 10 px or 10 ppt
-# bindsym $mod+RightMouseButton
 
 bindsym $mod+semicolon split toggle
 
-# Desativa o monitor do notebook
-exec_always --no-startup-id xrandr --output LVDS-1 --off
+# Default orientation
+default_orientation auto
 
-# Plano de fundo
-exec --no-startup-id ~/.fehbg
-
-# Compositor
-exec --no-startup-id picom --config ~/.config/picom/picom.conf
-
-# Executar o Emacs
-bindsym $mod+e exec emacs-gtk
-
-# Desativa o modo de descanso da tela
-exec_always --no-startup-id xset s off -dpms
-
-exec --no-startup-id /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &
-
-# Executar o polybar
-exec_always --no-startup-id $HOME/.config/polybar/launch.sh
-
-# Remove a barra de titulo 
+# Remove title bar
 default_border pixel 1
 default_floating_border pixel 2
 
-# -------------------------------------------------- 
 # Standard workspace for apps
-# dialogs
+# Dialogs
 for_window [window_role="About"] floating enable
 for_window [window_role="Organizer"] floating enable
 for_window [window_role="Preferences"] floating enable
@@ -193,28 +158,60 @@ for_window [window_role="webconsole"] floating enable
 for_window [window_type="dialog"] floating enable
 for_window [window_type="menu"] floating enable
 
-# Softwares no modo flutuante
+# Softwares in floating mode
 for_window [class="Blender"] floating enable
 for_window [class="Qalculate-gtk"] floating enable
+for_window [class="qalculate-qt"] floating enable
 for_window [class="Anki"] floating enable
 
-# Softwares em seus workspaces
-assign [class="^st-256color$"] number "1:term"
-assign [class="^Emacs-gtk$"] number "1:term"
-assign [class="^Thunar$"] number "1:term"
-assign [class="^Brave-browser$"] number "2:web"
-assign [class="^Chromium$"] number "2:web"
-assign [class="^FreeTube$"] number "4:media"
-assign [class="^mpv$"] number "4:media"
-assign [class="^vlc$"] number "4:media"
+# --------------------------------------------------
+# Softwares padrão e mapeamento para softwares de uso
 
-# -------------------------------------------------- 
-# Colors
+exec_always --no-startup-id sleep 3 && picom --config ~/.config/picom/picom.conf
+exec_always --no-startup-id sh ~/.fehbg
+
+# Mapeamento para executar o emacs
+bindsym $mod+e exec emacs-gtk
+
+# --------------------------------------------------
+# Theme
+
+# Font for window titles. Will also be used by the bar unless a different font
+# is used in the bar {} block below.
+font pango:Hack Nerd Font 9
+
+# Set gruvbox colors
+set $bg_0 #1d2021
+set $fg #ebdbb2
+set $red #cc241d
+set $green #98971a
+set $yellow #d79921
+set $blue #458588
+set $purple #b16286
+set $aqua #689d68
+set $gray #a89984
+set $bg #282828
+
+
+# i3bar using i3blocks
+bar {
+        status_command SCRIPT_DIR=~/.config/i3blocks/scripts i3blocks -c ~/.config/i3blocks/i3blocks.conf
+        tray_output HDMI-1
+        tray_padding 1
+        colors {
+        background $bg_0
+        statusline $yellow
+        #                   border  backgr. text
+        focused_workspace   $aqua   $aqua   $bg_0
+        inactive_workspace  $bg     $bg   $yellow
+        active_workspace    $bg     $bg   $yellow
+        urgent_workspace    $red $red $bg
+        }
+}
+
 # class                 border  backgr. text    indicator child_border
-client.focused          #458588 #458588 #ebdbb2 #83c07c   #458588
-client.focused_inactive #333333 #5f676a #ebdbb2 #484e50   #5f676a
-client.unfocused        #333333 #222222 #928374 #292d2e   #222222
-client.urgent           #2f343a #cc241d #ebdbb2 #cc241d   #cc241d
-client.placeholder      #000000 #0c0c0c #ebdbb2 #000000   #0c0c0c
+client.focused          $green  $green  $bg_0   $purple   $green
+client.focused_inactive $bg_0   $bg_0   $fg     $purple   $bg_0
+client.unfocused        $bg_0   $bg_0   $fg     $purple   $bg_0
+client.urgent           $red    $red    $fg     $red      $red
 
-client.background       #ebdbb2

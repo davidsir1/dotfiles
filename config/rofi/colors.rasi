@@ -3,7 +3,7 @@
 * {
   bg: #1d2021;
   al: #282828;
-  ac: #458588;
-  se: #689d6a;
+  ac: #b8bb26;
+  se: #fabd2f;
   fg: #ebdbb2;
 }

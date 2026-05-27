@@ -30,13 +30,13 @@ window {
 prompt {
   enabled: true;
   padding: 10px;
-  background-color: @al;
+  background-color: @bg;
   text-color: @ac;
   font: "Hack Nerd Font 13";
 }
 
 entry {
-  background-color: @al;
+  background-color: @bg;
   text-color: @ac;
   placeholder-color: @ac;
   expand: true;
@@ -53,13 +53,13 @@ inputbar {
   border: 0px 0px 1px 0px;
   border-radius: 0px;
   spacing: 0px;
-  background-color: @al;
+  background-color: @bg;
   text-color: @fg;
   border-color: @ac;
 }
 
 listview {
-  background-color: @al;
+  background-color: @bg;
   padding: 0px;
   columns: 1;
   lines: 10;
@@ -70,7 +70,7 @@ listview {
 }
 
 mainbox {
-  background-color: @al;
+  background-color: @bg;
   border: 0px;
   border-radius: 0px;
   border-color: @ac;
@@ -80,7 +80,7 @@ mainbox {
 }
 
 element {
-  background-color: @al;
+  background-color: @bg;
   text-color: @fg;
   orientation: horizontal;
   border-radius: 0px;
@@ -97,8 +97,8 @@ element-text {
 }
 
 element selected {
-  background-color: @ac;
-  text-color: @fg;
+  background-color: @se;
+  text-color: @bg;
   border: 0px 0px 0px 0px;
   border-radius: 0px;
 }

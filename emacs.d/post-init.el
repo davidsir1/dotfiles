@@ -13,6 +13,9 @@
 (dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
   (add-hook hook #'display-line-numbers-mode))
 
+;;; Definição da indentação
+(setq-default tab-width 4)
+(setq-default indent-tabs-mode nil)
 
 ;;; ido-mode
 (ido-mode t)
@@ -56,6 +59,7 @@
 
 ;; ------------------------------------------------------------------------
 ;; Configuração do Corfu
+
 ;; Corfu enhances in-buffer completion by displaying a compact popup with
 ;; current candidates, positioned either below or above the point. Candidates
 ;; can be selected by navigating up or down.
@@ -93,7 +97,34 @@
   (add-hook 'completion-at-point-functions #'cape-elisp-block))
 
 ;; ------------------------------------------------------------------------
+;; Configuração do Eglot
+
+(use-package eglot
+  :ensure nil
+  :commands (eglot-ensure
+             eglot-rename
+             eglot-format-buffer)
+  :custom
+  (eglot-autoshutdown t)
+  :config
+  (fset #'jsonrpc--log-event #'ignore)
+  (setq jsonrpc-event-hook nil)
+  (setq-default eglot-ignored-server-capabilities '(:documentatFormattingProvider
+                                                    :documentRangeFormattingProvider
+                                                    :onTypeFormattingProvider
+                                                    :documentOnTypeFormattingProvider))
+  (setq eglot-format-buffer-on-save nil)
+
+  ;; configuração dos servidores
+  (add-to-list 'eglot-server-programs
+               '(simpc-mode . ("clangd-19" "--compile-commands-dir=.")))
+  )
+
+(add-hook 'simpc-mode-hook #'eglot-ensure)
+
+;; ------------------------------------------------------------------------
 ;; Configuração do tema utilizando doom-themes
+
 (use-package doom-themes
   :ensure t
   :custom
@@ -115,6 +146,7 @@
 
 ;; ------------------------------------------------------------------------
 ;; Configuração do Org-mode
+
 (use-package org
   :ensure t
   :commands (org-mode org-version)
@@ -131,8 +163,11 @@
   ;; (org-fontify-quote-and-verse-blocks t)
   (org-startup-truncated t))
 
+(add-hook 'org-mode-hook (lambda () (display-line-numbers-mode -1)))
+
 ;; ------------------------------------------------------------------------
 ;; Configuração do markdown-mode
+
 (use-package markdown-mode
   :commands (gfm-mode
              gfm-view-mode
@@ -148,28 +183,11 @@
   (:map markdown-mode-map
         ("C-c C-e" . markdown-do)))
 
-;; ------------------------------------------------------------------------
-;; Configuração do Eglot
-(use-package eglot
-  :ensure nil
-  :commands (eglot-ensure
-             eglot-rename
-             eglot-format-buffer)
-  :custom
-  (eglot-autoshutdown t)
-  :config
-  (fset #'jsonrpc--log-event #'ignore)
-  (setq jsonrpc-event-hook nil)
 
-  ;; configuração dos servidores
-  (add-to-list 'eglot-server-programs
-               '(simpc-mode . ("clangd-14")))
-  )
-
-(add-hook 'simpc-mode-hook #'eglot-ensure)
 
 ;; ------------------------------------------------------------------------
 ;; Configuração do yasnippets
+
 (use-package yasnippet
   :demand t
   :commands yas-minor-mode-on
@@ -179,6 +197,7 @@
 
 ;; ------------------------------------------------------------------------
 ;; Configuração do multiple-cursors
+
 (use-package multiple-cursors
   :hook ((multiple-cursors-mode-enabled-hook . (lambda() (corfu-mode -1)))
          (multiple-cursors-mode-disabled-hook . (lambda () (corfu-mode 1))))
@@ -262,6 +281,7 @@
 
 ;; ------------------------------------------------------------------------
 ;; mood-line
+
 (use-package mood-line
   :config
   (mood-line-mode)
@@ -272,17 +292,49 @@
   )
 
 ;; ------------------------------------------------------------------------
-;; whitespace
+;; file types
 
-(use-package whitespace
-  :ensure nil
-  :config
-  (global-whitespace-mode t)
-  (setq whitespace-style '(face tabs tab-mark trailing lines-tail spaces
-                                space-mark)
-        whitespace-display-mappings
-        '((space-mark ?\ [?\u00B7] [?.])
-          (space-mark ?\xA0 [?\u00A4] [?_])
-          (newline-mark ?\n [?¬ ?\n])
-          (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t])))
-  )
+;; Support for Git files (.gitconfig, .gitignore, .gitattributes...)
+(use-package git-modes
+  :commands (gitattributes-mode
+             gitconfig-mode
+             gitignore-mode)
+  :mode (("/\\.gitignore\\'" . gitignore-mode)
+         ("/info/exclude\\'" . gitignore-mode)
+         ("/git/ignore\\'" . gitignore-mode)
+         ("/.gitignore_global\\'" . gitignore-mode)  ; jc-dotfiles
+
+         ("/\\.gitconfig\\'" . gitconfig-mode)
+         ("/\\.git/config\\'" . gitconfig-mode)
+         ("/modules/.*/config\\'" . gitconfig-mode)
+         ("/git/config\\'" . gitconfig-mode)
+         ("/\\.gitmodules\\'" . gitconfig-mode)
+         ("/etc/gitconfig\\'" . gitconfig-mode)
+
+         ("/\\.gitattributes\\'" . gitattributes-mode)
+         ("/info/attributes\\'" . gitattributes-mode)
+         ("/git/attributes\\'" . gitattributes-mode)))
+
+;; Support for Dockerfile files.
+;;
+;; NOTE: Prefer the tree-sitter-based dockerfile-ts-mode over dockerfile-mode
+;; when available, as it provides more accurate syntax parsing and enhanced
+;; editing features.
+(use-package dockerfile-mode
+  :commands dockerfile-mode
+  :mode ("Dockerfile\\'" . dockerfile-mode))
+
+;; Support for *.lua files.
+;;
+;; Prefer the tree-sitter-based lua-ts-mode over lua-mode when available, as it
+;; provides more accurate syntax parsing and enhanced editing features.
+(use-package lua-mode
+  :commands lua-mode
+  :mode ("\\.lua\\'" . lua-mode))
+
+;; ------------------------------------------------------------------------
+;; rainbow-mode
+(use-package rainbow-mode
+  :ensure t
+  :hook ((css-mode . rainbow-mode)
+         (prog-mode . rainbow-mode)))
